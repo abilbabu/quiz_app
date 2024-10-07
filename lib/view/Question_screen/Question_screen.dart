@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:quiz_app/dummy_db.dart';
+import 'package:quiz_app/utils/animations_constants.dart';
 import 'package:quiz_app/utils/color_constants.dart';
 import 'package:quiz_app/view/ResultScreen.dart';
 
@@ -32,21 +34,41 @@ class _QuestionScreenState extends State<QuestionScreen> {
         child: Column(
           children: [
             Expanded(
-              child: Container(
-                child: Center(
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    DummyDb.questionList[count]["question"],
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: ColorConstants.White),
+              child: Stack(
+                children: [
+                  Container(
+                    child: Center(
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        DummyDb.questionList[count]["question"],
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: ColorConstants.White),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: ColorConstants.Gold, width: 5),
+                        color: ColorConstants.primarycolor,
+                        borderRadius: BorderRadius.circular(15)),
                   ),
-                ),
-                decoration: BoxDecoration(
-                    border: Border.all(color: ColorConstants.Gold, width: 5),
-                    color: ColorConstants.primarycolor,
-                    borderRadius: BorderRadius.circular(15)),
+
+                  // lottie animation
+                  if (selectedanswerindex ==
+                      DummyDb.questionList[count]["answerindex"])
+                    Lottie.asset(AnimationsConstants.RightAnsAnimation,
+                        width: 1000, height: 1000)
+                  else if (selectedanswerindex != null)
+                    if (selectedanswerindex !=
+                        DummyDb.questionList[count]["answerindex"])
+                      Center(
+                        child: Lottie.asset(
+                            AnimationsConstants.WrongAnsAnimation,
+                            width: 450,
+                            height: 300),
+                      ),
+                ],
               ),
             ),
             Column(
@@ -59,6 +81,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     if (selectedanswerindex == null) {
                       setState(() {
                         selectedanswerindex = index;
+
                         if (index ==
                             DummyDb.questionList[count]["answerindex"]) {
                           rightAnswerCount++;
